@@ -15,6 +15,8 @@ class Heap{
     Node peak();
     Node extractMin();
     bool empty();
+    void changePriority(int,int);
+    void print();
 };
 
 bool Heap::empty(){
@@ -89,6 +91,33 @@ void Heap::insert(Node node){
     }
   }
 }
+void Heap::changePriority(int value,int priority){
+  int index=-1;
+  for(int i = 0 ; i < nodes.size() ; ++i){
+    if(nodes[i].value==value)
+      nodes[i].priority = priority;
+      index = i;
+  }
+  if(index==-1){
+    std::cout << "No node with value " << value << " was found in the heap";
+    return;
+  }
+  if(index==0){
+    return;
+  }
+  while(nodes[index].priority<nodes[index/2].priority){
+    int tmp = nodes[index].priority;
+    nodes[index].priority = nodes[index/2].priority;
+    nodes[index/2].priority = tmp;
+    index = index/2;
+  }
+}
+
+void Heap::print(){
+  for(auto node:nodes)
+    std::cout << "(" << node.priority << "," << node.value << ") ";
+  std::cout << std::endl;
+}
 
 int main(){
   Heap heap;
@@ -96,8 +125,7 @@ int main(){
   heap.insert(Node(1,15));
   heap.insert(Node(5,3));
   heap.insert(Node(4,12));
-  while(!heap.empty()){
-    std::cout << heap.extractMin().priority << std::endl;
-  }
-  std::cout  << std::endl;
+  heap.print();
+  heap.changePriority(12,1);
+  heap.print();
 }
