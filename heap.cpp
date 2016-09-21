@@ -1,17 +1,20 @@
 #include <iostream>
 #include <vector>
 
+struct Node{
+  Node(int p,int v):priority(p),value(v){}
+  int priority;
+  int value;
+};
 
 class Heap{
   private:
+    std::vector<Node> nodes;
   public:
-    std::vector<int> nodes;
-    void insert(int);
-    int peak();
-    int extractMin();
-    void print();
+    void insert(Node);
+    Node peak();
+    Node extractMin();
     bool empty();
-
 };
 
 bool Heap::empty(){
@@ -20,70 +23,68 @@ bool Heap::empty(){
   return false;
 }
 
-void Heap::print(){
-  for(auto node : nodes)
-    std::cout << node << " ";
-  std::cout << std::endl;
+void swapNodes(std::vector<Node> &nodes,int i, int j){
+  int tmp = nodes[i].priority;
+  nodes[i].priority = nodes[j].priority;
+  nodes[j].priority = tmp;
 }
 
-int Heap::extractMin(){
-  int min = nodes[0];
-  nodes[0] = nodes[nodes.size()-1];
-  nodes[nodes.size()-1]=min;
+Node Heap::extractMin(){
+  //Save minimum
+  Node minimumNode = nodes[0];
+  //Replace root node(minimum node) with the last node in the heap
+  swapNodes(nodes,0,nodes.size()-1);
+  //remove root node
   nodes.pop_back();
+  //If heap is empty -> return root node.
   if(empty()){
-    return min;
+    return minimumNode;
   }
+  // Make heap valid again
   int index = 0;
-
+  // Check if the node at current index has children
   bool leftChildExist = (index*2+1)<nodes.size() ? true : false;
   bool rightChildExist = (index*2+2)<nodes.size() ? true : false;
-  while((leftChildExist && nodes[index]>nodes[index*2+1]) || (rightChildExist && nodes[index]>nodes[index*2+2])){
-    //std::cout << "While begin" << std::endl;
-    int rightChild,leftChild,swap;
+  //If the node at current index has children with lower values then swap node at index with one of its children.
+  while((leftChildExist && nodes[index].priority>nodes[index*2+1].priority)\
+   || (rightChildExist && nodes[index].priority>nodes[index*2+2].priority)){
+    bool swapLeftChild;
+    // If node at current index has two children, swap with the node with lowest value.
     if(leftChildExist && rightChildExist){
-       leftChild = nodes[index*2+1];
-       rightChild =nodes[index*2+2];
-       swap = leftChild>rightChild ? 1 : 0;
+       swapLeftChild = nodes[index*2+1].priority > nodes[index*2+2].priority ? false : true;
     }else if(leftChildExist){
-      leftChild = nodes[index*2+1];
-      swap = 0;
+      swapLeftChild = true ;
     }else{
-      rightChild =nodes[index*2+2];
-      swap = 1;
+      swapLeftChild = false;
     }
-    if(swap){
-      int tmp = nodes[index];
-      nodes[index] = rightChild;
-      nodes[index*2+2] = tmp;
+    if(swapLeftChild){
+      swapNodes(nodes,index,index*2+1);
       index = index*2+2;
     }else{
-      int tmp = nodes[index];
-      nodes[index] = leftChild;
-      nodes[index*2+1] = tmp;
+      swapNodes(nodes,index,index*2+2);
       index = index*2+1;
     }
+    //Check if the new node at index has children
     leftChildExist  = (index*2+1)<nodes.size() ? true : false;
     rightChildExist = (index*2+2)<nodes.size() ? true : false;
   }
-
-  return min;
+  return minimumNode;
 }
 
-int Heap::peak(){
+Node Heap::peak(){
   return nodes.at(0);
 }
 
-void Heap::insert(int elem){
+void Heap::insert(Node node){
   if(nodes.size()==0){
-    nodes.push_back(elem);
+    nodes.push_back(node);
   }else{
-    nodes.push_back(elem);
+    nodes.push_back(node);
     int index = nodes.size()-1;
-    while(index > 0 && nodes[index]<nodes[index/2]){
-      int tmp = nodes[index];
-      nodes[index] = nodes[index/2];
-      nodes[index/2] = tmp;
+    while(index > 0 && nodes[index].priority<nodes[index/2].priority){
+      int tmp = nodes[index].priority;
+      nodes[index].priority = nodes[index/2].priority;
+      nodes[index/2].priority = tmp;
       index = index/2;
     }
   }
@@ -91,38 +92,12 @@ void Heap::insert(int elem){
 
 int main(){
   Heap heap;
-  heap.insert(3);
-  heap.insert(3);
-  heap.insert(3);
-  heap.insert(1);
-  heap.insert(3);
-  heap.insert(312);
-  heap.insert(3);
-  heap.insert(3);
-  heap.insert(23);
-  heap.insert(3);
-  heap.insert(3);
-  heap.insert(23);
-  heap.insert(3);
-
-
-
+  heap.insert(Node(2,8));
+  heap.insert(Node(1,15));
+  heap.insert(Node(5,3));
+  heap.insert(Node(4,12));
   while(!heap.empty()){
-    //heap.print();
-    //std::cout << "------" << std::endl;
-    std::cout << heap.extractMin() << std::endl;
+    std::cout << heap.extractMin().priority << std::endl;
   }
   std::cout  << std::endl;
-
-
-
-  /*heap.print();
-  heap.extractMin();
-  heap.print();
-  int index = 2;
-  std::cout << "Parent: " << heap.nodes.at(index) << std::endl;
-  std::cout << "Left child: " << heap.nodes.at(index*2+1) << std::endl;
-  std::cout << "right child: " << heap.nodes.at(index*2+2) << std::endl;*/
-
-
 }
