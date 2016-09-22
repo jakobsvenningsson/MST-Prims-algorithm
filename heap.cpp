@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <random>
+#include <ctime>
 
 struct Node{
   Node(int p,int v):priority(p),value(v){}
@@ -61,10 +63,10 @@ Node Heap::extractMin(){
     }
     if(swapLeftChild){
       swapNodes(nodes,index,index*2+1);
-      index = index*2+2;
+      index = index*2+1;
     }else{
       swapNodes(nodes,index,index*2+2);
-      index = index*2+1;
+      index = index*2+2;
     }
     //Check if the new node at index has children
     leftChildExist  = (index*2+1)<nodes.size() ? true : false;
@@ -121,11 +123,14 @@ void Heap::print(){
 
 int main(){
   Heap heap;
-  heap.insert(Node(2,8));
-  heap.insert(Node(1,15));
-  heap.insert(Node(5,3));
-  heap.insert(Node(4,12));
+
+
+  std::srand(std::time(0));
+  for(int i = 0 ; i < 20 ; i++){
+    heap.insert(Node(std::rand()%100,(std::rand()%5)*3));
+  }
   heap.print();
-  heap.changePriority(12,1);
-  heap.print();
+  while(!heap.empty()){
+    std::cout << heap.extractMin().priority << std::endl;
+  }
 }
