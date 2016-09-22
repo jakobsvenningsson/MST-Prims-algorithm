@@ -1,25 +1,8 @@
 #include <iostream>
-#include <vector>
 #include <random>
 #include <ctime>
+#include "heap.h"
 
-struct Node{
-  Node(int p,int v):priority(p),value(v){}
-  int priority;
-  int value;
-};
-
-class Heap{
-  private:
-    std::vector<Node> nodes;
-  public:
-    void insert(Node);
-    Node peak();
-    Node extractMin();
-    bool empty();
-    void changePriority(int,int);
-    void print();
-};
 
 bool Heap::empty(){
   if(nodes.size()==0)
@@ -123,8 +106,6 @@ void Heap::print(){
 
 int main(){
   Heap heap;
-
-
   std::srand(std::time(0));
   for(int i = 0 ; i < 20 ; i++){
     heap.insert(Node(std::rand()%100,(std::rand()%5)*3));
