@@ -1,16 +1,22 @@
 #include <iostream>
 #include "graph.h"
-void Graph::insertNode(char node){
+
+
+std::map<int,std::list<std::pair<int,int>>> Graph::getVertices(){
+    return vertices;
+}
+
+void Graph::insertNode(int node){
   auto exist = vertices.find(node);
   if(exist==vertices.end()){
-    std::list<std::pair<char,int>> list;
+    std::list<std::pair<int,int>> list;
     vertices.insert(std::make_pair(node,list));
   }else{
     std::cout << "Node with same name already exist!" << std::endl;
   }
 }
 
-void Graph::insertEdge(char from,char to,int cost){
+void Graph::insertEdge(int from,int to,int cost){
   auto exist = vertices.find(from);
   if(exist!=vertices.end()){
     exist->second.push_back(std::make_pair(to,cost));
@@ -19,7 +25,7 @@ void Graph::insertEdge(char from,char to,int cost){
   }
 }
 
-std::list<std::pair<char,int>> Graph::getNeightboursOfNode(char node){
+std::list<std::pair<int,int>> Graph::getNeightboursOfNode(int node){
   auto exist = vertices.find(node);
   if(exist!=vertices.end()){
     return exist->second;
@@ -28,16 +34,3 @@ std::list<std::pair<char,int>> Graph::getNeightboursOfNode(char node){
     return {};
   }
 }
-
-
-/*int main(){
-  Graph g;
-  g.insertNode('x');
-  g.insertNode('z');
-  g.insertEdge('x','y',2);
-  std::list<std::pair<char,int>> c = g.getNeightboursOfNode('x');
-  for(auto n:c)
-    std::cout << n.first << " " << n.second << std::endl;
-
-  return 0;
-}*/

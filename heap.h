@@ -18,8 +18,6 @@ class Heap{
     bool empty();
     void changePriority(int,int);
     void print();
+    bool exist(int);
 };
-
-
-
 #endif

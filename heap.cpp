@@ -3,6 +3,14 @@
 #include <ctime>
 #include "heap.h"
 
+bool Heap::exist(int value){
+  for(auto node:nodes){
+    if(value==node.value){
+      return true;
+    }
+  }
+  return false;
+}
 
 bool Heap::empty(){
   if(nodes.size()==0)
@@ -11,9 +19,9 @@ bool Heap::empty(){
 }
 
 void swapNodes(std::vector<Node> &nodes,int i, int j){
-  int tmp = nodes[i].priority;
-  nodes[i].priority = nodes[j].priority;
-  nodes[j].priority = tmp;
+  Node tmp = nodes[i];
+  nodes[i]= nodes[j];
+  nodes[j]= tmp;
 }
 
 Node Heap::extractMin(){
@@ -79,9 +87,11 @@ void Heap::insert(Node node){
 void Heap::changePriority(int value,int priority){
   int index=-1;
   for(int i = 0 ; i < nodes.size() ; ++i){
-    if(nodes[i].value==value)
+    if(nodes[i].value==value){
       nodes[i].priority = priority;
+      nodes[i].value = value;
       index = i;
+    }
   }
   if(index==-1){
     std::cout << "No node with value " << value << " was found in the heap";
@@ -91,9 +101,9 @@ void Heap::changePriority(int value,int priority){
     return;
   }
   while(nodes[index].priority<nodes[index/2].priority){
-    int tmp = nodes[index].priority;
-    nodes[index].priority = nodes[index/2].priority;
-    nodes[index/2].priority = tmp;
+    Node tmp = nodes[index];
+    nodes[index] = nodes[index/2];
+    nodes[index/2] = tmp;
     index = index/2;
   }
 }
@@ -102,16 +112,4 @@ void Heap::print(){
   for(auto node:nodes)
     std::cout << "(" << node.priority << "," << node.value << ") ";
   std::cout << std::endl;
-}
-
-int main(){
-  Heap heap;
-  std::srand(std::time(0));
-  for(int i = 0 ; i < 20 ; i++){
-    heap.insert(Node(std::rand()%100,(std::rand()%5)*3));
-  }
-  heap.print();
-  while(!heap.empty()){
-    std::cout << heap.extractMin().priority << std::endl;
-  }
 }

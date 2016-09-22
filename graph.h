@@ -5,11 +5,12 @@
 #include <utility>
 class Graph{
   public:
-    void insertNode(char);
-    void insertEdge(char,char,int);
-    std::list<std::pair<char,int>> getNeightboursOfNode(char);
+    std::map<int,std::list<std::pair<int,int>>> getVertices();
+    void insertNode(int);
+    void insertEdge(int,int,int);
+    std::list<std::pair<int,int>> getNeightboursOfNode(int);
   private:
-    std::map<char,std::list<std::pair<char,int>>> vertices;
+    std::map<int,std::list<std::pair<int,int>>> vertices;
 };
 
 #endif
